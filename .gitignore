@@ -1,0 +1,22 @@
+# Vercel
+.vercel/
+
+# macOS
+.DS_Store
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Env
+.env
+.env.local
+*.local

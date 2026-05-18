@@ -1474,24 +1474,31 @@ Sau khi xong, giải thích cho tôi từng file đã thay đổi.</div>
     </div>
 
     <div class="homework reveal">
-      <div class="homework-title">📝 3 Bài Tập Tự Làm</div>
+      <div class="homework-title">📝 3 Bài Tập Tự Làm — Tạo Add-in Hoàn Toàn Bằng AI</div>
+
+      <p style="margin-bottom: 16px;">Tất cả 3 bài tập đều phải dùng <strong>MVVM pattern</strong> + <strong>giao diện WPF</strong>. Code 100% sinh bằng AI (Claude Code / Cursor / Copilot), bạn chỉ làm prompt engineering và verify kết quả.</p>
 
       <ol>
         <li>
-          <strong>Đổi Tên View Hàng Loạt</strong> — Add-in cho phép user chọn nhiều view, gõ prefix (ví dụ "TANG-01-"), tất cả view được đổi tên thêm prefix đó. Có dialog confirm trước khi đổi.
+          <strong>Add-in "Duplicate Sheet"</strong> — Add-in cho phép user chọn một hoặc nhiều sheet trong project, nhập số lượng bản sao + prefix tên, sau đó tự động duplicate kèm theo views trên sheet. Giao diện WPF có danh sách sheet (DataGrid), input số lượng, preview tên sheet mới trước khi confirm.
         </li>
         <li>
-          <strong>Đếm Phòng Theo Tầng</strong> — Add-in quét toàn project, đếm số <code>Room</code> trong mỗi level, xuất ra TaskDialog dạng bảng: "Tầng 1: 12 phòng / Tầng 2: 15 phòng / ...". Bonus: cho phép export ra CSV.
+          <strong>Add-in "Import Sheet from Excel"</strong> — Add-in đọc file Excel (.xlsx) chứa danh sách sheet (cột: Sheet Number, Sheet Name, Title Block), tự động tạo các sheet tương ứng trong Revit. Giao diện WPF có Browse Excel, preview bảng data từ Excel, chọn Title Block từ dropdown, button "Import All".
         </li>
         <li>
-          <strong>Export Schedule ra Excel</strong> — Add-in lấy schedule đang active, đọc toàn bộ rows + columns, ghi ra file Excel (.xlsx) bằng ClosedXML. Mở Save Dialog cho user chọn nơi lưu.
+          <strong>Add-in "Dim Định Vị Cột"</strong> — Add-in tự động tạo dimension định vị tất cả cột trong mặt bằng (Structural Column) tới các grid line gần nhất theo phương X và Y. Giao diện WPF cho user chọn view mặt bằng, filter loại cột, tùy chọn dimension style, button "Generate Dimensions".
         </li>
       </ol>
 
       <div class="callout warning" style="margin-top: 20px;">
         <div class="callout-icon">📤</div>
         <div class="callout-content">
-          <p><strong>Nộp bài:</strong> Push code lên GitHub repo riêng của bạn, gửi link cho giảng viên. Buổi 2 sẽ review và sửa lỗi chung. <strong>Không làm bài tập = không được học buổi 2</strong>.</p>
+          <p><strong>Yêu cầu nộp bài:</strong></p>
+          <ul style="margin: 8px 0 0 20px;">
+            <li><strong>Source code:</strong> Push code lên GitHub repo riêng của bạn (1 repo cho cả 3 add-in, hoặc 3 repo riêng), gửi link cho giảng viên.</li>
+            <li><strong>Video quay kết quả:</strong> Quay video demo từng add-in chạy thực tế trong Revit — show ribbon button, mở WPF dialog, chọn input, click run, kết quả trong project Revit. Upload YouTube/Drive/Loom, gửi link.</li>
+          </ul>
+          <p style="margin-top: 12px;"><strong>Không làm bài tập = không được học buổi 2.</strong></p>
         </div>
       </div>
     </div>

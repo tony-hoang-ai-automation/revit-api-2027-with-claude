@@ -17,6 +17,5 @@ venv/
 *.swp
 
 # Env
-.env
-.env.local
 *.local
+config.bat

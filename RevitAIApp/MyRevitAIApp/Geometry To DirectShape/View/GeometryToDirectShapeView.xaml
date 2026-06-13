@@ -1,0 +1,112 @@
+<Window x:Class="MyRevitAIApp.GeometryToDirectShape.View.GeometryToDirectShapeView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:MyRevitAIApp.GeometryToDirectShape.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:GeometryToDirectShapeViewModel}"
+        Title="Geometry → DirectShape — So sánh Instance vs Symbol Geometry"
+        Height="560"
+        Width="780"
+        MinHeight="480"
+        MinWidth="680"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize">
+    <Window.Resources>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Source info -->
+        <Border Grid.Row="0"
+                Background="#11000000"
+                CornerRadius="4"
+                Padding="10,8"
+                Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="Phần tử đã chọn:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SourceDescription}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Mode selection -->
+        <GroupBox Grid.Row="1" Header="Nguồn geometry" Padding="10,8" Margin="0,0,0,8">
+            <StackPanel>
+                <RadioButton GroupName="GeomMode"
+                             Content="Instance Geometry — DirectShape nằm đúng vị trí phần tử gốc"
+                             IsChecked="{Binding IsInstanceMode}"
+                             Margin="0,2"/>
+                <RadioButton GroupName="GeomMode"
+                             Content="Symbol Geometry — DirectShape nằm ở gốc toạ độ (0,0,0)"
+                             IsChecked="{Binding IsSymbolMode}"
+                             Margin="0,2"/>
+                <RadioButton GroupName="GeomMode"
+                             Content="Cả hai — tạo 1 Instance + 1 Symbol để so sánh trực tiếp"
+                             IsChecked="{Binding IsBothMode}"
+                             Margin="0,2"/>
+                <TextBlock Style="{StaticResource Hint}"
+                           Text="GetInstanceGeometry() đã áp transform vị trí instance → trùng phần tử gốc. GetSymbolGeometry() là geometry thô trong hệ toạ độ family → đặt tại gốc model. Khác biệt chỉ xuất hiện với Family Instance."/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Results -->
+        <GroupBox Grid.Row="2" Header="Kết quả — DirectShape đã tạo">
+            <DataGrid ItemsSource="{Binding Results}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      RowHeight="24">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mode"        Binding="{Binding ModeLabel}"     Width="140"/>
+                    <DataGridTextColumn Header="Số Solid"    Binding="{Binding SolidCount}"    Width="70"/>
+                    <DataGridTextColumn Header="Thể tích (m³)" Binding="{Binding VolumeLabel}" Width="110"/>
+                    <DataGridTextColumn Header="Tâm (mm)"    Binding="{Binding CenterLabel}"   Width="180"/>
+                    <DataGridTextColumn Header="DS Id"       Binding="{Binding DirectShapeId}" Width="90"/>
+                    <DataGridTextColumn Header="Ghi chú"     Binding="{Binding Note}"          Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <!-- Bottom bar -->
+        <Grid Grid.Row="3" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="Tạo DirectShape"
+                    Command="{Binding CreateCommand}"
+                    IsDefault="True"
+                    Padding="18,6"
+                    MinWidth="140"/>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding StatusMessage}"
+                       VerticalAlignment="Center"
+                       Margin="16,0"
+                       TextTrimming="CharacterEllipsis"
+                       Opacity="0.85"/>
+            <Button Grid.Column="2"
+                    Content="Đóng"
+                    IsCancel="True"
+                    Padding="20,6"
+                    MinWidth="100"/>
+        </Grid>
+    </Grid>
+</Window>

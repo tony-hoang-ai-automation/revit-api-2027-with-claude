@@ -1,0 +1,166 @@
+<Window x:Class="MyRevitAIApp.AutoDimColumns.Views.AutoDimColumnsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:MyRevitAIApp.AutoDimColumns.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:AutoDimColumnsViewModel}"
+        Title="Auto-Dim Columns — Tự động dim mặt bằng định vị cột"
+        Height="680"
+        Width="1100"
+        MinHeight="560"
+        MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize">
+    <Window.Resources>
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,10,0,4"/>
+        </Style>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,4"/>
+        </Style>
+        <Style x:Key="FieldBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Main body: settings (left) + preview (right) -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="380"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: settings -->
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,0,12,0">
+                    <GroupBox Header="Scope" Padding="8" Margin="0,0,0,8">
+                        <StackPanel>
+                            <ComboBox ItemsSource="{Binding AvailableScopes}"
+                                      SelectedItem="{Binding SelectedScope}"
+                                      Padding="4,2"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="ActiveView = tất cả cột trong view. SelectedOnly = chỉ cột đã select trước."
+                                       TextWrapping="Wrap"
+                                       Opacity="0.7"
+                                       FontSize="11"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Dimension Type" Padding="8" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Linear:" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox  Grid.Row="0" Grid.Column="1"
+                                       ItemsSource="{Binding AvailableLinearDimTypes}"
+                                       SelectedItem="{Binding SelectedLinearDimType}"
+                                       DisplayMemberPath="Name"
+                                       Padding="4,2" Margin="0,0,0,4"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Radial:" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox  Grid.Row="1" Grid.Column="1"
+                                       ItemsSource="{Binding AvailableRadialDimTypes}"
+                                       SelectedItem="{Binding SelectedRadialDimType}"
+                                       DisplayMemberPath="Name"
+                                       Padding="4,2"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Khoảng cách offset từ face cột (mm)" Padding="8" Margin="0,0,0,8">
+                        <TextBox Text="{Binding FaceOffsetMm, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource FieldBox}"/>
+                    </GroupBox>
+
+                    <GroupBox Header="Trục cần dim" Padding="8" Margin="0,0,0,8">
+                        <StackPanel>
+                            <CheckBox Content="Trục X (ngang)" IsChecked="{Binding DimAxisX}" Margin="0,2"/>
+                            <CheckBox Content="Trục Y (dọc)"   IsChecked="{Binding DimAxisY}" Margin="0,2"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Loại dim" Padding="8" Margin="0,0,0,8">
+                        <StackPanel>
+                            <CheckBox Content="Self-dim 4 mặt (cột vuông)"      IsChecked="{Binding IncludeSelfDim}"     Margin="0,2"/>
+                            <CheckBox Content="Radial dim (cột tròn) — R25+ only" IsChecked="{Binding IncludeRadialDim}"  Margin="0,2"/>
+                            <CheckBox Content="Dim tổng grid-to-grid (chu vi)"   IsChecked="{Binding IncludePerimeterDim}" Margin="0,2"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Dim cũ đã tồn tại" Padding="8">
+                        <StackPanel>
+                            <ComboBox ItemsSource="{Binding AvailableExistingPolicies}"
+                                      SelectedItem="{Binding SelectedExistingPolicy}"
+                                      Padding="4,2"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="DeleteThenRecreate sẽ xoá dim cũ overlap rồi tạo mới (có confirm dialog)."
+                                       TextWrapping="Wrap"
+                                       Opacity="0.7"
+                                       FontSize="11"/>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- RIGHT: preview -->
+            <GroupBox Grid.Column="1" Header="Preview — Danh sách dim sẽ được tạo">
+                <DataGrid ItemsSource="{Binding PreviewItems}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="22">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#"      Binding="{Binding Index}"     Width="40"/>
+                        <DataGridTextColumn Header="Cột"    Binding="{Binding Column}"    Width="170"/>
+                        <DataGridTextColumn Header="Loại"   Binding="{Binding Kind}"      Width="100"/>
+                        <DataGridTextColumn Header="Target" Binding="{Binding Target}"    Width="150"/>
+                        <DataGridTextColumn Header="Style"  Binding="{Binding DimStyle}"  Width="120"/>
+                        <DataGridTextColumn Header="Note"   Binding="{Binding Note}"      Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+
+        <!-- Bottom bar -->
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="Preview"
+                    Command="{Binding PreviewCommand}"
+                    Padding="16,6"
+                    MinWidth="120"/>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding StatusMessage}"
+                       VerticalAlignment="Center"
+                       Margin="16,0"
+                       TextTrimming="CharacterEllipsis"
+                       Opacity="0.85"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Content="Cancel" IsCancel="True" Padding="20,6" MinWidth="100" Margin="0,0,8,0"/>
+                <Button Content="Run"    Command="{Binding RunCommand}" IsDefault="True" Padding="24,6" MinWidth="120"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

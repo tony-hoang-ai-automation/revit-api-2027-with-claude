@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
+        <PackageReference Include="xunit" Version="2.9.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <!-- Share pure-logic source files from main project (no Revit dep, xUnit-friendly) -->
+    <ItemGroup>
+        <Compile Include="..\MyRevitAIApp\DuplicateSheet\Models\NamingRule.cs">
+            <Link>SharedSource\NamingRule.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\DuplicateSheet\Services\INamingRuleEngine.cs">
+            <Link>SharedSource\INamingRuleEngine.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\DuplicateSheet\Services\NamingRuleEngine.cs">
+            <Link>SharedSource\NamingRuleEngine.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+    <!-- ColumnRebarViewer pure-logic (no Revit/WPF dep) -->
+    <ItemGroup>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\RebarColumnShape.cs">
+            <Link>ColumnRebarViewer\SharedSource\RebarColumnShape.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\LongitudinalLayout.cs">
+            <Link>ColumnRebarViewer\SharedSource\LongitudinalLayout.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\BarPoint.cs">
+            <Link>ColumnRebarViewer\SharedSource\BarPoint.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\StirrupLine.cs">
+            <Link>ColumnRebarViewer\SharedSource\StirrupLine.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\CrossTie.cs">
+            <Link>ColumnRebarViewer\SharedSource\CrossTie.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\StirrupZone.cs">
+            <Link>ColumnRebarViewer\SharedSource\StirrupZone.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\RebarSection2D.cs">
+            <Link>ColumnRebarViewer\SharedSource\RebarSection2D.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Models\RebarElevation2D.cs">
+            <Link>ColumnRebarViewer\SharedSource\RebarElevation2D.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Services\IRebarLayoutCalculator.cs">
+            <Link>ColumnRebarViewer\SharedSource\IRebarLayoutCalculator.cs</Link>
+        </Compile>
+        <Compile Include="..\MyRevitAIApp\Column Rebar Viewer\Services\RebarLayoutCalculator.cs">
+            <Link>ColumnRebarViewer\SharedSource\RebarLayoutCalculator.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>
